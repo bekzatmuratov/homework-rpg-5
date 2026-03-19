@@ -15,24 +15,22 @@ public class DungeonFacade {
     }
 
     public AdventureResult runAdventure(HeroProfile hero, BossEnemy boss, AttackAction action) {
-
         AdventureResult result = new AdventureResult();
 
-        // 1. Preparation
-        String prep = preparationService.prepare(hero, boss, action);
-        result.addLine(prep);
+        String preparationSummary = preparationService.prepare(hero, boss, action);
+        result.addLine(preparationSummary);
 
-        // 2. Battle
         AdventureResult battleResult = battleService.battle(hero, boss, action);
 
         result.setWinner(battleResult.getWinner());
         result.setRounds(battleResult.getRounds());
-        result.getLog().forEach(result::addLine);
 
-        // 3. Reward
+        for (String line : battleResult.getLog()) {
+            result.addLine(line);
+        }
+
         String reward = rewardService.determineReward(result);
         result.setReward(reward);
-
         result.addLine("Reward granted: " + reward);
 
         return result;
