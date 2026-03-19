@@ -6,7 +6,7 @@ public class HeroProfile {
 
     public HeroProfile(String name, int health) {
         this.name = name;
-        this.health = health;
+        this.health = Math.max(0, health);
     }
 
     public String getName() {
@@ -18,12 +18,13 @@ public class HeroProfile {
     }
 
     public void takeDamage(int amount) {
-        // TODO: Decide how health should be reduced and clamped.
-        health -= amount;
+        if (!isAlive()) {
+            return;
+        }
+        health = Math.max(0, health - Math.max(0, amount));
     }
 
     public boolean isAlive() {
-        // TODO: Decide whether additional conditions belong here.
         return health > 0;
     }
 }
